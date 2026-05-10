@@ -1,0 +1,56 @@
+seed: 42
+device: auto
+
+data:
+  csv_path: data/Atlantic Hurricane Tracks 1851 to 2017.csv
+  date_col: Date
+  storm_id_col: Storm_ID
+  lat_col: Observation_Latitude
+  lon_col: Observation_Longitude
+  min_sequence_length: 8
+  split:
+    strategy: storm_id
+    train_ratio: 0.7
+    val_ratio: 0.15
+    test_ratio: 0.15
+  window_sizes: [3, 5, 8, 12]
+  target_mode: direct  # direct | delta
+  features_mode: basic # basic | enriched
+
+training:
+  epochs: 60
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  early_stopping_patience: 8
+  num_workers: 0
+
+models:
+  baseline:
+    run: true
+  mlp:
+    hidden_sizes: [128, 64]
+    dropout: 0.2
+  rnn:
+    type: RNN
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+  lstm:
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+  gru:
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+  tcn:
+    channels: [64, 128]
+    kernel_size: 3
+    dropout: 0.2
+
+experiment:
+  model_names: [persistence, mean_displacement, mlp, rnn, lstm, gru, tcn]
+  runs_per_model: 1
+  save_plots: true
+  save_predictions: true
